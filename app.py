@@ -57,12 +57,13 @@ class lifeFrame(tk.Frame):
         #centers all of the grid placements
         self.grid_anchor(tk.CENTER)
         
-        
         #creating the matrix
         self.matrix = matrix.Matrix(width=125, height=125)
         
         #scale for the cells that are drawn. higher scale = bigger cells
         self.scale = 5.6
+        self.running = False
+        self.generation = 1
         
         #setting up the canvas
         self.canvas = tk.Canvas(self, 
@@ -72,11 +73,11 @@ class lifeFrame(tk.Frame):
         self.canvas.grid(row=1, column=0, columnspan=3)
         
         #start button to begin the game
-        self.startButton = tk.Button(self, text="Start", command=lambda: self.nextGen())
+        self.startButton = tk.Button(self, text="Start", command=lambda: self.start())
         self.startButton.grid(row=0, column=1, sticky="E")
         
         #stop button
-        self.stopButton = tk.Button(self, text="Stop", command="")
+        self.stopButton = tk.Button(self, text="Stop", command=lambda: self.stop())
         self.stopButton.grid(row=0, column=2, sticky="W")
         
         #label that shows that number generation the game is on
@@ -95,14 +96,15 @@ class lifeFrame(tk.Frame):
                                                  row*self.scale,
                                                  fill="blue")
                     
-        
+       
+    
     #starts the actual game
     def nextGen(self):
-        self.startButton.configure(state='disabled') #disables the start button since it can't be pressed during the game
-        
-        #loop that makes each new generation and draws it onto the canvas
-        generations = 500
-        for i in range(generations):
+        if self.running:
+            self.startButton.configure(state='disabled') #disables the start button since it can't be pressed during the game
+            
+            #loop that makes each new generation and draws it onto the canvas
+            # for i in range(generations):
             self.canvas.delete('all')
             self.matrix.m = matrix.nextGeneration(self.matrix) #updates the matrix to the next generation
             
@@ -112,22 +114,30 @@ class lifeFrame(tk.Frame):
                         y0 = row-1 if row != 0 else 0
                         x0 = col-1 if col != 0 else 0
                         self.canvas.create_rectangle(x0*self.scale,
-                                                     y0*self.scale,
-                                                     col*self.scale,
-                                                     row*self.scale,
-                                                     fill="blue")
+                                                    y0*self.scale,
+                                                    col*self.scale,
+                                                    row*self.scale,
+                                                    fill="blue")
         
         #to optimize this I could assign a tag to each rectangle and only redraw it if it's value is different from the previous generation, but that would require a lot more logic
         #I'm not sure if the limitation is actually drawing the rectangles or generating the next generation, but if the matrix size goes over 125 it slows down significantly
-            
             self.update()
-            self.genLabel.configure(text="Generation: " + str(i))
+            self.genLabel.configure(text="Generation: " + str(self.generation))
+            self.generation += 1
+            self.after(5, self.nextGen())
             #region
             # new_mat = "\n".join([" ".join([str(x) for x in y]) for y in self.matrix.m])
             # self.label.configure(text=new_mat)
             # self.genCounter.configure(text="Generation: "+str(i+1))
             #endregion
-        
+    
+    def start(self):
+        self.running = True
+        self.nextGen()
+    
+    def stop(self):
+        self.running = False
+        self.startButton.configure(state='normal')
 
 if __name__ == '__main__':
     app = App()
