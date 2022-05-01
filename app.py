@@ -68,8 +68,7 @@ class lifeFrame(tk.Frame):
         #setting up the canvas
         self.canvas = tk.Canvas(self, 
                                 width=700, 
-                                height=700, 
-                                )
+                                height=700)
         self.canvas.grid(row=1, column=0, columnspan=3)
         
         #start button to begin the game
@@ -77,7 +76,7 @@ class lifeFrame(tk.Frame):
         self.startButton.grid(row=0, column=1, sticky="E")
         
         #stop button
-        self.stopButton = tk.Button(self, text="Stop", command=lambda: self.stop())
+        self.stopButton = tk.Button(self, text="Stop", state="disabled", command=lambda: self.stop())
         self.stopButton.grid(row=0, column=2, sticky="W")
         
         #label that shows that number generation the game is on
@@ -96,7 +95,6 @@ class lifeFrame(tk.Frame):
                                                  row*self.scale,
                                                  fill="blue")
                     
-       
     
     #starts the actual game
     def nextGen(self):
@@ -132,6 +130,7 @@ class lifeFrame(tk.Frame):
             #endregion
     
     def start(self):
+        self.stopButton.configure(state='normal')
         self.running = True
         self.nextGen()
     
