@@ -34,7 +34,8 @@ def randomMatrix(matrix: Matrix) -> None:
 # Prints the neighbors of a given coordinate in a matrix
 def printNeighbors(m: Matrix, row: int, col: int) -> None:
     for i in range(row-1, row+2):
-        print([m.m[i][x] for x in range(col-1, col+2) if i<m.height and x<m.width])
+        print([m.m[i][x] for x in range(col-1, col+2) if i<m.height and x<m.width], end="")
+        print(" neighbors")
 
 
 # Counts the neighbors of a given coordinate in a matrix
